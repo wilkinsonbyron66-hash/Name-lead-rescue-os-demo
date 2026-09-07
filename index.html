@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Rescue OS – AI Sales Follow-Up</title>
+  <link href="https://rsms.me/inter/inter.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --panel: #131722;
+      --text: #f4f6fb;
+      --muted: #9aa4b5;
+      --line: #293141;
+      --accent: #8b7cff;
+      --accent2: #5eead4;
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 80% 0, #27204f 0, #0b0d12 38%);
+      color: var(--text);
+      font: 15px/1.55 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+    
+    .wrap {
+      max-width: 1120px;
+      margin: auto;
+      padding: 36px 22px 70px;
+    }
+    
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      align-items: flex-end;
+      margin-bottom: 28px;
+    }
+    
+    .eyebrow {
+      color: var(--accent2);
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+    
+    .hero h1 {
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1;
+      margin: 10px 0 12px;
+      letter-spacing: -0.04em;
+    }
+    
+    .hero p {
+      color: var(--muted);
+      max-width: 680px;
+      font-size: 17px;
+    }
+    
+    .badge {
+      border: 1px solid var(--line);
+      background: #111521;
+      padding: 10px 13px;
+      border-radius: 999px;
+      color: #cbd3e2;
+      white-space: nowrap;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    
+    .card {
+      background: rgba(19, 23, 34, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 18px 50px #0004;
+    }
+    
+    .card h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+    }
+    
+    .card p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+    
+    .full { grid-column: 1 / -1; }
+    
+    label {
+      display: block;
+      color: #cbd3e2;
+      font-weight: 700;
+      font-size: 13px;
+      margin: 0 0 7px;
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      background: #0e121b;
+      border: 1px solid #303849;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 12px;
+      font: inherit;
+      outline: none;
+      margin-bottom: 14px;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+    }
+    
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+    }
+    
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    
+    button {
+      border: 0;
+      border-radius: 11px;
+      padding: 12px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .primary {
+      background: linear-gradient(135deg, var(--accent), #b19cff);
+      color: white;
+      width: 100%;
+    }
+    
+    .primary:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+    
+    .secondary {
+      background: #202635;
+      color: #e8ecf5;
+      border: 1px solid #343c4c;
+    }
+    
+    .secondary:hover:not(:disabled) {
+      border-color: var(--accent);
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    
+    .tab {
+      background: #171c28;
+      color: #aeb7c8;
+      border: 1px solid var(--line);
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 0;
+    }
+    
+    .tab.active {
+      background: #2a2550;
+      color: #fff;
+      border-color: #6d61cf;
+    }
+    
+    .output {
+      white-space: pre-wrap;
+      background: #0d1119;
+      border: 1px solid #2d3545;
+      border-radius: 12px;
+      padding: 16px;
+      min-height: 240px;
+      color: #e9edf7;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    
+    .kpi {
+      background: #10151f;
+      border: 1px solid var(--line);
+      padding: 13px;
+      border-radius: 12px;
+    }
+    
+    .kpi b {
+      font-size: 22px;
+      display: block;
+      margin-top: 8px;
+    }
+    
+    .small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    
+    .history {
+      display: grid;
+      gap: 8px;
+    }
+    
+    .history-item {
+      background: #0e121b;
+      border: 1px solid #303849;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    
+    .history-item b {
+      color: var(--accent2);
+    }
+    
+    .footer {
+      margin-top: 18px;
+      color: #788396;
+      font-size: 12px;
+      text-align: center;
+    }
+    
+    @media (max-width: 760px) {
+      .grid { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+      .hero { display: block; }
+      .badge { display: inline-flex; margin-top: 10px; }
+      .row { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: 1fr; }
+      button { width: 100%; margin-right: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Demo • Free to test</div>
+        <h1>Lead Rescue OS</h1>
+        <p>Turn an ignored, vague or "just enquiring" lead into a qualified conversation, a persuasive reply and a follow-up sequence — instantly.</p>
+      </div>
+      <div class="badge">v2.0 • Template Demo • built for service businesses</div>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2>1. Lead intelligence</h2>
+        <div class="row">
+          <div>
+            <label>Business</label>
+            <input id="biz" type="text" value="Dubai Auto Detailing Co.">
+          </div>
+          <div>
+            <label>Offer</label>
+            <input id="offer" type="text" value="Premium ceramic coating">
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Lead name</label>
+            <input id="name" type="text" value="James">
+          </div>
+          <div>
+            <label>Lead source</label>
+            <select id="source">
+              <option>WhatsApp</option>
+              <option>Instagram</option>
+              <option>Website</option>
+              <option>Facebook</option>
+              <option>Referral</option>
+            </select>
+          </div>
+        </div>
+        <label>Lead message</label>
+        <textarea id="lead">Hi, how much for ceramic coating on a BMW M4? And how long does it take?</textarea>
+        <div class="row">
+          <div>
+            <label>Typical price (AED)</label>
+            <input id="price" type="number" value="3500">
+          </div>
+          <div>
+            <label>Target close rate (%)</label>
+            <input id="close" type="number" value="25">
+          </div>
+        </div>
+        <button class="primary" onclick="generateAll()">Generate rescue pack</button>
+      </section>
+
+      <section class="card">
+        <h2>2. Revenue opportunity</h2>
+        <p class="small">A simple calculator that turns "we need more leads" into a measurable follow-up problem.</p>
+        <div class="kpis">
+          <div class="kpi">
+            <span class="small">1 recovered sale</span>
+            <b id="kpi1">AED 3,500</b>
+          </div>
+          <div class="kpi">
+            <span class="small">10 recovered sales</span>
+            <b id="kpi2">AED 35,000</b>
+          </div>
+          <div class="kpi">
+            <span class="small">100 leads @ target rate</span>
+            <b id="kpi3">AED 87,500</b>
+          </div>
+        </div>
+        <div style="margin-top: 18px;" class="small">The product is deliberately ROI-first: sell the outcome, not "AI".</div>
+      </section>
+
+      <section class="card full">
+        <div class="tabs">
+          <button class="tab active" onclick="setTab('reply')">Instant reply</button>
+          <button class="tab" onclick="setTab('follow')">5-touch follow-up</button>
+          <button class="tab" onclick="setTab('qualify')">Qualification</button>
+        </div>
+        <div class="output" id="output">Click "Generate rescue pack" to see outputs</div>
+        <button class="secondary" onclick="copyOutput()">Copy output</button>
+        <button class="secondary" onclick="generateAll()">Regenerate</button>
+      </section>
+
+      <section class="card full">
+        <h2>Demo version</h2>
+        <p><b>What this is:</b> A free template-based demo. All responses are proven sales templates, no API costs.</p>
+        <p><b>What it shows:</b> The workflow, UX, and quality of follow-up sequences your prospects would get.</p>
+        <p><b>Ready to upgrade?</b> Switch to real Claude AI (costs ~0.5–2 cents per lead) by deploying the full version with an API key.</p>
+        <p><b>Sell to your market:</b> "I install a simple AI-assisted follow-up system that helps service businesses stop losing warm enquiries." — AED 750–1,500 setup + AED 250–500/month.</p>
+        <p class="small">🎯 Best prospects: detailing, clinics, gyms, home services, photographers, real estate, wedding vendors — any lead-driven SMB.</p>
+      </section>
+    </div>
+    <div class="footer">Lead Rescue OS • Free Demo Version • Template-based • $0 cost</div>
+  </div>
+
+  <script>
+    let currentTab = 'reply';
+    let allResponses = {};
+
+    function setTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      updateOutput();
+    }
+
+    function updateKPIs() {
+      const price = parseInt(document.getElementById('price').value) || 0;
+      const close = parseInt(document.getElementById('close').value) || 0;
+      document.getElementById('kpi1').textContent = `AED ${price.toLocaleString()}`;
+      document.getElementById('kpi2').textContent = `AED ${(price * 10).toLocaleString()}`;
+      document.getElementById('kpi3').textContent = `AED ${Math.round(100 * (close / 100) * price).toLocaleString()}`;
+    }
+
+    function updateOutput() {
+      const output = allResponses[currentTab] || 'Click "Generate rescue pack" to see outputs';
+      document.getElementById('output').textContent = output;
+    }
+
+    async function generateAll() {
+      const biz = document.getElementById('biz').value;
+      const offer = document.getElementById('offer').value;
+      const name = document.getElementById('name').value;
+      const lead = document.getElementById('lead').value;
+      const price = parseInt(document.getElementById('price').value);
+      const priceStr = `AED ${price.toLocaleString()}`;
+
+      const instantReply = `Hi ${name} — absolutely. For ${offer}, our typical starting point is around ${priceStr} depending on spec and requirements.
+
+I'd like to confirm two quick details so I can give you a precise quote:
+1) What's your specific need/timeline?
+2) Are you looking for the best value, premium option, or something in between?
+
+Once I have that, I can send you the exact price and turnaround time.`;
+
+      const followUp = `DAY 0 — Value-first reply
+Send the instant reply above. Goal: get one easy answer, not "close the sale".
+
+DAY 1 — Proof
+"Quick one, ${name} — I can also send you 2–3 examples of ${offer} we've done recently. Want me to send them?"
+
+DAY 3 — Remove uncertainty
+"Just checking in, ${name}.
