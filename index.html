@@ -169,6 +169,33 @@
       border-color: var(--accent);
     }
     
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    
+    .whatsapp-btn {
+      background: #25d366;
+      color: white;
+      border: none !important;
+    }
+    
+    .whatsapp-btn:hover {
+      background: #20ba5a;
+    }
+    
+    .email-btn {
+      background: #ea4335;
+      color: white;
+      border: none !important;
+    }
+    
+    .email-btn:hover {
+      background: #d33426;
+    }
+    
     .tabs {
       display: flex;
       gap: 8px;
@@ -232,23 +259,6 @@
       font-size: 12px;
     }
     
-    .history {
-      display: grid;
-      gap: 8px;
-    }
-    
-    .history-item {
-      background: #0e121b;
-      border: 1px solid #303849;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 13px;
-    }
-    
-    .history-item b {
-      color: var(--accent2);
-    }
-    
     .footer {
       margin-top: 18px;
       color: #788396;
@@ -263,6 +273,7 @@
       .badge { display: inline-flex; margin-top: 10px; }
       .row { grid-template-columns: 1fr; }
       .kpis { grid-template-columns: 1fr; }
+      .action-buttons { grid-template-columns: 1fr; }
       button { width: 100%; margin-right: 0; }
     }
   </style>
@@ -311,6 +322,16 @@
         <textarea id="lead">Hi, how much for ceramic coating on a BMW M4? And how long does it take?</textarea>
         <div class="row">
           <div>
+            <label>Lead phone (+971...)</label>
+            <input id="phone" type="text" placeholder="+971501234567">
+          </div>
+          <div>
+            <label>Lead email</label>
+            <input id="email" type="email" placeholder="name@example.com">
+          </div>
+        </div>
+        <div className="row">
+          <div>
             <label>Typical price (AED)</label>
             <input id="price" type="number" value="3500">
           </div>
@@ -349,8 +370,11 @@
           <button class="tab" onclick="setTab('qualify')">Qualification</button>
         </div>
         <div class="output" id="output">Click "Generate rescue pack" to see outputs</div>
-        <button class="secondary" onclick="copyOutput()">Copy output</button>
-        <button class="secondary" onclick="generateAll()">Regenerate</button>
+        <div class="action-buttons">
+          <button class="secondary" onclick="copyOutput()">📋 Copy</button>
+          <button class="whatsapp-btn" onclick="sendWhatsApp()">📱 WhatsApp</button>
+          <button class="email-btn" onclick="sendEmail()">📧 Email</button>
+        </div>
       </section>
 
       <section class="card full">
@@ -368,6 +392,7 @@
   <script>
     let currentTab = 'reply';
     let allResponses = {};
+    let leadName = 'Client';
 
     function setTab(tab) {
       currentTab = tab;
@@ -396,6 +421,8 @@
       const lead = document.getElementById('lead').value;
       const price = parseInt(document.getElementById('price').value);
       const priceStr = `AED ${price.toLocaleString()}`;
+      
+      leadName = name; // Store for later use
 
       const instantReply = `Hi ${name} — absolutely. For ${offer}, our typical starting point is around ${priceStr} depending on spec and requirements.
 
@@ -423,24 +450,24 @@ DAY 12 — Breakup / reactivation
       const qualification = `QUALIFICATION SCORECARD
 
 Need / urgency (0–2)
-• Is there a specific problem or desired outcome?
-• Is there a date/deadline mentioned?
+- Is there a specific problem or desired outcome?
+- Is there a date/deadline mentioned?
 
 Fit (0–2)
-• Does this match your ideal customer profile?
-• Any constraints that make delivery difficult?
+- Does this match your ideal customer profile?
+- Any constraints that make delivery difficult?
 
 Buying signal (0–2)
-• Asked about price, availability, or process?
-• Responded more than once or with detail?
+- Asked about price, availability, or process?
+- Responded more than once or with detail?
 
 Commercial value (0–2)
-• Estimated value: ${priceStr}
-• Upsell/cross-sell opportunity?
+- Estimated value: ${priceStr}
+- Upsell/cross-sell opportunity?
 
 Next action (0–2)
-• Ask ONE low-friction question
-• Do not dump a brochure
+- Ask ONE low-friction question
+- Do not dump a brochure
 
 TOTAL: /10
 7–10 = high intent • 4–6 = nurture • 0–3 = low priority`;
@@ -458,14 +485,3 @@ TOTAL: /10
     function copyOutput() {
       const text = document.getElementById('output').textContent;
       navigator.clipboard.writeText(text).then(() => {
-        alert('Copied to clipboard!');
-      });
-    }
-
-    // Update KPIs on input change
-    document.getElementById('price').addEventListener('input', updateKPIs);
-    document.getElementById('close').addEventListener('input', updateKPIs);
-    updateKPIs();
-  </script>
-</body>
-</html>
