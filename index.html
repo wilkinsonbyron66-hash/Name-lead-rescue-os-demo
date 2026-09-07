@@ -20,16 +20,16 @@
     .full { grid-column: 1 / -1; }
     label { display: block; color: #cbd3e2; font-weight: 700; font-size: 13px; margin: 0 0 7px; }
     input, textarea, select { width: 100%; background: #0e121b; border: 1px solid #303849; color: var(--text); border-radius: 10px; padding: 12px; font: inherit; outline: none; margin-bottom: 14px; }
-    input:focus, textarea:focus { border-color: var(--accent); }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
     textarea { min-height: 110px; resize: vertical; font-family: monospace; font-size: 13px; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     button { border: 0; border-radius: 11px; padding: 12px 16px; font-weight: 800; cursor: pointer; font-size: 14px; margin-right: 8px; margin-bottom: 8px; }
     .primary { background: linear-gradient(135deg, var(--accent), #b19cff); color: white; width: 100%; }
     .secondary { background: #202635; color: #e8ecf5; border: 1px solid #343c4c; }
-    .whatsapp { background: #25d366; color: white; }
-    .email { background: #ea4335; color: white; }
+    .whatsapp { background: #25d366; color: white; border: none; }
+    .email { background: #ea4335; color: white; border: none; }
     .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
-    .tab { background: #171c28; color: #aeb7c8; border: 1px solid var(--line); padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; }
+    .tab { background: #171c28; color: #aeb7c8; border: 1px solid var(--line); padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; margin-bottom: 0; }
     .tab.active { background: #2a2550; color: #fff; border-color: #6d61cf; }
     .output { white-space: pre-wrap; background: #0d1119; border: 1px solid #2d3545; border-radius: 12px; padding: 16px; min-height: 240px; color: #e9edf7; font-family: monospace; font-size: 13px; line-height: 1.6; margin-bottom: 12px; }
     .actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 12px; }
@@ -37,6 +37,7 @@
     .kpi { background: #10151f; border: 1px solid var(--line); padding: 13px; border-radius: 12px; }
     .kpi b { font-size: 22px; display: block; margin-top: 8px; }
     .small { color: var(--muted); font-size: 12px; }
+    .template-tag { background: var(--accent2); color: #000; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; }
     @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .row { grid-template-columns: 1fr; } .actions { grid-template-columns: 1fr; } button { width: 100%; margin-right: 0; } }
   </style>
 </head>
@@ -48,57 +49,150 @@
         <h1>Lead Rescue OS</h1>
         <p>Instant sales replies + follow-up automation for service businesses.</p>
       </div>
-      <div class="badge">v2.0 • Template Demo</div>
+      <div class="badge">v2.1 • Industry Templates</div>
     </section>
 
     <div class="grid">
       <section class="card">
+        <h2>⚡ Pick Your Industry</h2>
+        <label>Business Type</label>
+        <select id="industry" onchange="loadTemplate()">
+          <option value="">-- Select Industry --</option>
+          <option value="detailing">Auto Detailing</option>
+          <option value="realestate">Real Estate</option>
+          <option value="clinic">Clinic/Medical</option>
+          <option value="gym">Gym/Fitness</option>
+          <option value="photography">Photography</option>
+          <option value="wedding">Wedding Vendor</option>
+          <option value="homeservices">Home Services</option>
+          <option value="custom">Custom</option>
+        </select>
+
         <h2>Lead Details</h2>
         <div class="row">
-          <div><label>Business</label><input id="biz" value="Dubai Auto Detailing"></div>
-          <div><label>Offer</label><input id="offer" value="Ceramic Coating"></div>
+          <div><label>Business <span class="template-tag" id="tag1"></span></label><input id="biz" value=""></div>
+          <div><label>Offer</label><input id="offer" value=""></div>
         </div>
         <div class="row">
-          <div><label>Lead Name</label><input id="name" value="James"></div>
-          <div><label>Phone</label><input id="phone" placeholder="+971501234567"></div>
+          <div><label>Lead Name</label><input id="name" value=""></div>
+          <div><label>Phone (+971...)</label><input id="phone" placeholder="+971501234567"></div>
         </div>
         <div class="row">
           <div><label>Email</label><input id="email" placeholder="name@example.com"></div>
-          <div><label>Price (AED)</label><input id="price" type="number" value="3500"></div>
+          <div><label>Price (AED)</label><input id="price" type="number" value=""></div>
         </div>
         <label>Lead Message</label>
-        <textarea id="lead">How much for ceramic coating on a BMW M4?</textarea>
+        <textarea id="lead" placeholder="Paste their inquiry here..."></textarea>
         <button class="primary" onclick="generate()">Generate Reply</button>
       </section>
 
       <section class="card">
-        <h2>Revenue</h2>
+        <h2>Revenue Impact</h2>
         <div class="kpis">
-          <div class="kpi"><span class="small">1 Sale</span><b id="kpi1">AED 3,500</b></div>
-          <div class="kpi"><span class="small">10 Sales</span><b id="kpi2">AED 35,000</b></div>
-          <div class="kpi"><span class="small">100 @ 25%</span><b id="kpi3">AED 87,500</b></div>
+          <div class="kpi"><span class="small">1 Sale</span><b id="kpi1">AED 0</b></div>
+          <div class="kpi"><span class="small">10 Sales</span><b id="kpi2">AED 0</b></div>
+          <div class="kpi"><span class="small">100 @ 25%</span><b id="kpi3">AED 0</b></div>
         </div>
+        <p class="small" style="margin-top: 18px;">The app is ROI-first: show the outcome, not the features.</p>
       </section>
 
       <section class="card full">
         <div class="tabs">
-          <button class="tab active" onclick="tab('reply')">Reply</button>
-          <button class="tab" onclick="tab('follow')">Follow-up</button>
-          <button class="tab" onclick="tab('qualify')">Qualify</button>
+          <button class="tab active" onclick="tab('reply')">📝 Reply</button>
+          <button class="tab" onclick="tab('follow')">📧 Follow-up</button>
+          <button class="tab" onclick="tab('qualify')">✅ Qualify</button>
         </div>
-        <div class="output" id="output">Click "Generate Reply" to get started</div>
+        <div class="output" id="output">Select an industry and click "Generate Reply" to start</div>
         <div class="actions">
           <button class="secondary" onclick="copy()">📋 Copy</button>
-          <button class="whatsapp" onclick="whatsapp()">📱 WhatsApp</button>
-          <button class="email" onclick="email()">📧 Email</button>
+          <button class="whatsapp" onclick="sendWhatsApp()">📱 WhatsApp</button>
+          <button class="email" onclick="sendEmail()">📧 Email</button>
         </div>
       </section>
     </div>
   </div>
 
   <script>
+    const templates = {
+      detailing: {
+        name: 'Auto Detailing',
+        biz: 'Your Auto Detailing',
+        offer: 'Ceramic Coating',
+        price: 3500,
+        reply: 'Hi {name} — absolutely! For {offer}, we start at around {price} depending on spec and vehicle.\n\nQuick questions:\n1) What\'s your timeline?\n2) Full protection or maintenance coat?\n\nI\'ll send exact pricing + turnaround once I know.',
+        follow: 'DAY 0: Send reply above\nDAY 1: "Quick one — want photos of our last 5 ceramic coatings?"\nDAY 3: "Checking in, {name}. Budget, timeline, or quality — what matters most?"\nDAY 6: "Still interested? I have a slot this weekend — can lock in today\'s price."\nDAY 12: "Closing this for now. Reply YES anytime and I\'ll pick it back up."',
+        qualify: 'SCORECARD\nNeed/urgency: Specific car model? Timeline?\nFit: Daily driver or weekend car?\nBuying signal: Asked price/timeline? Engaged?\nValue: {price}. Upsell protection plan?\nNext: Ask 1 question only.'
+      },
+      realestate: {
+        name: 'Real Estate',
+        biz: 'Your Real Estate',
+        offer: 'Property Sale/Rental',
+        price: 50000,
+        reply: 'Hi {name} — thanks for reaching out about {offer}.\n\nI have a few questions to find the perfect match:\n1) Budget range?\n2) Move-in timeline?\n3) Must-haves (bedrooms, location)?\n\nI\'ll send 2-3 perfect options once I know.',
+        follow: 'DAY 0: Send reply above\nDAY 1: "Quick update — 3 new properties matching your criteria just listed."\nDAY 3: "One property is getting interest. Want a private showing?"\nDAY 6: "This one won\'t last long — family just made an offer. Your thoughts?"\nDAY 12: "Still searching? New inventory just dropped. Worth a look?"',
+        qualify: 'SCORECARD\nNeed: Budget set? Timeline urgent?\nFit: Right location/type?\nBuying signal: Asked to view? Serious inquiry?\nValue: {price}. Referral potential?\nNext: Offer viewing.'
+      },
+      clinic: {
+        name: 'Clinic/Medical',
+        biz: 'Your Clinic',
+        offer: 'Medical Consultation',
+        price: 250,
+        reply: 'Hi {name} — thanks for contacting us about {offer}.\n\nTo schedule your appointment:\n1) What\'s your availability?\n2) Any urgent symptoms we should know?\n3) First time with us?\n\nI\'ll confirm your slot immediately.',
+        follow: 'DAY 0: Send reply above\nDAY 1: "Reminder: your appointment details + prep instructions"\nDAY 3: "How did your visit go? Follow-up needed?"\nDAY 6: "Time for your follow-up appointment?"\nDAY 12: "Worth booking your next checkup now?"',
+        qualify: 'SCORECARD\nNeed: Urgent or routine?\nFit: Right specialist?\nBuying signal: Asked specific questions? Engaged?\nValue: {price}. Referral network?\nNext: Confirm appointment.'
+      },
+      gym: {
+        name: 'Gym/Fitness',
+        biz: 'Your Gym',
+        offer: 'Membership Package',
+        price: 199,
+        reply: 'Hi {name} — awesome! {offer} is exactly what you need.\n\nJust a quick question:\n1) What\'s your main goal (muscle, weight loss, fitness)?\n2) Experience level?\n3) Any injuries we should know about?\n\nI\'ll set you up with the perfect plan.',
+        follow: 'DAY 0: Send reply above\nDAY 1: "Welcome! Here\'s your intro tour + free session booking link"\nDAY 3: "How\'s your first week going? Need a form check?"\nDAY 6: "Free nutrition consultation for new members — interested?"\nDAY 12: "Loving it so far? Upgrade to premium coaching?"',
+        qualify: 'SCORECARD\nNeed: Goal clarity?\nFit: Right program level?\nBuying signal: Asked pricing? Details engaged?\nValue: {price}. Trainer upsell?\nNext: Book intro session.'
+      },
+      photography: {
+        name: 'Photography',
+        biz: 'Your Photography',
+        offer: 'Photo Session',
+        price: 1500,
+        reply: 'Hi {name} — {offer} sounds perfect!\n\nLet me ask:\n1) Date & time needed?\n2) Location (studio or on-site)?\n3) How many hours + outfit changes?\n\nI\'ll send your custom package + pricing.',
+        follow: 'DAY 0: Send reply above\nDAY 1: "Sent your custom quote + sample gallery from similar shoots"\nDAY 3: "Slot filling up that date — want me to hold it?"\nDAY 6: "Price lock expires this week — book now to secure it"\nDAY 12: "Still interested? I can do a discount if you book this week"',
+        qualify: 'SCORECARD\nNeed: Date firm? Budget set?\nFit: Style match (modern/classic)?\nBuying signal: Asked deliverables? Timeline urgent?\nValue: {price}. Album/prints upsell?\nNext: Book date.'
+      },
+      wedding: {
+        name: 'Wedding Vendor',
+        biz: 'Your Wedding Service',
+        offer: 'Wedding Package',
+        price: 5000,
+        reply: 'Hi {name} — we\'d love to be part of your big day!\n\nQuick questions:\n1) Wedding date?\n2) Guest count & venue?\n3) Budget range?\n\nI\'ll send your custom package + gallery.',
+        follow: 'DAY 0: Send reply above\nDAY 1: "Sent inspiration gallery + sample timeline"\nDAY 3: "Checking dates — your date is getting popular"\nDAY 6: "Can offer early-bird discount if you book this month"\nDAY 12: "Still planning? Worth connecting to finalize?"',
+        qualify: 'SCORECARD\nNeed: Date firm? Budget clear?\nFit: Style alignment?\nBuying signal: Asked details? Engaged timeline?\nValue: {price}. Referral network huge.\nNext: Site visit.'
+      },
+      homeservices: {
+        name: 'Home Services',
+        biz: 'Your Home Services',
+        offer: 'Service Call',
+        price: 450,
+        reply: 'Hi {name} — {offer} is definitely doable.\n\nJust need details:\n1) What day works best?\n2) Address (how far from us?)?\n3) Budget range?\n\nI\'ll confirm your time slot immediately.',
+        follow: 'DAY 0: Send reply above\nDAY 1: "Confirmed: your appointment + tech details"\nDAY 3: "How was your service? Any follow-up needed?"\nDAY 6: "Maintenance tip: here\'s what to watch for"\nDAY 12: "Ready for your annual maintenance visit?"',
+        qualify: 'SCORECARD\nNeed: Urgent repair or maintenance?\nFit: Within service area?\nBuying signal: Asked price/timeline? Ready to book?\nValue: {price}. Recurring revenue potential.\nNext: Book appointment.'
+      }
+    };
+
     let current = 'reply';
     let responses = {};
+
+    function loadTemplate() {
+      const industry = document.getElementById('industry').value;
+      const template = templates[industry];
+      if (template) {
+        document.getElementById('biz').value = template.biz;
+        document.getElementById('offer').value = template.offer;
+        document.getElementById('price').value = template.price;
+        document.getElementById('tag1').textContent = template.name;
+        updateKPIs();
+      }
+    }
 
     function tab(t) {
       current = t;
@@ -108,47 +202,20 @@
     }
 
     function generate() {
-      const name = document.getElementById('name').value;
-      const offer = document.getElementById('offer').value;
-      const price = parseInt(document.getElementById('price').value);
+      const name = document.getElementById('name').value || 'Client';
+      const offer = document.getElementById('offer').value || 'Service';
+      const price = parseInt(document.getElementById('price').value) || 0;
       const priceStr = 'AED ' + price.toLocaleString();
 
-      responses.reply = `Hi ${name} — absolutely! For ${offer}, we start at around ${priceStr} depending on spec.
+      const template = templates[document.getElementById('industry').value];
+      
+      if (template) {
+        responses.reply = template.reply.replace(/{name}/g, name).replace(/{offer}/g, offer).replace(/{price}/g, priceStr);
+        responses.follow = template.follow.replace(/{name}/g, name).replace(/{offer}/g, offer).replace(/{price}/g, priceStr);
+        responses.qualify = template.qualify.replace(/{price}/g, priceStr);
+      }
 
-Quick questions:
-1) What's your timeline?
-2) Best value, premium, or maximum quality?
-
-I'll send the exact price + turnaround time once I know.`;
-
-      responses.follow = `DAY 0: Send the reply above.
-
-DAY 1: "Quick one, ${name} — want me to send 2-3 examples?"
-
-DAY 3: "Checking in, ${name}. Budget, timeline, or quality — what matters most?"
-
-DAY 6: "Still interested? I have an opening next week. Want me to reserve it?"
-
-DAY 12: "Closing this now, but reply 'YES' anytime and I'll pick it back up."`;
-
-      responses.qualify = `SCORECARD (0-2 each)
-
-Need/urgency: Specific problem? Has deadline?
-
-Fit: Right customer? Any blockers?
-
-Buying signal: Asked about price/timeline? Engaged?
-
-Value: Worth ${priceStr}? Upsell opportunity?
-
-Next: Ask 1 question, no brochure.
-
-TOTAL: /10 → 7-10 hot | 4-6 nurture | 0-3 pass`;
-
-      document.getElementById('output').textContent = responses.reply;
-      document.getElementById('kpi1').textContent = priceStr;
-      document.getElementById('kpi2').textContent = 'AED ' + (price * 10).toLocaleString();
-      document.getElementById('kpi3').textContent = 'AED ' + Math.round(price * 25).toLocaleString();
+      document.getElementById('output').textContent = responses.reply || 'Select industry first';
     }
 
     function copy() {
@@ -156,19 +223,27 @@ TOTAL: /10 → 7-10 hot | 4-6 nurture | 0-3 pass`;
       alert('Copied!');
     }
 
-    function whatsapp() {
+    function sendWhatsApp() {
       const phone = document.getElementById('phone').value;
       if (!phone) { alert('Enter phone number'); return; }
       const msg = encodeURIComponent(document.getElementById('output').textContent);
-      window.open('https://wa.me/' + phone.replace(/\D/g, '') + '?text=' + msg);
+      const cleanPhone = phone.replace(/\D/g, '');
+      window.open('https://api.whatsapp.com/send?phone=' + cleanPhone + '&text=' + msg, '_blank');
     }
 
-    function email() {
+    function sendEmail() {
       const email_addr = document.getElementById('email').value;
       if (!email_addr) { alert('Enter email'); return; }
       const subject = encodeURIComponent('Re: ' + document.getElementById('offer').value);
       const body = encodeURIComponent(document.getElementById('output').textContent);
-      window.open('mailto:' + email_addr + '?subject=' + subject + '&body=' + body);
+      window.open('mailto:' + email_addr + '?subject=' + subject + '&body=' + body, '_blank');
+    }
+
+    function updateKPIs() {
+      const price = parseInt(document.getElementById('price').value) || 0;
+      document.getElementById('kpi1').textContent = 'AED ' + price.toLocaleString();
+      document.getElementById('kpi2').textContent = 'AED ' + (price * 10).toLocaleString();
+      document.getElementById('kpi3').textContent = 'AED ' + Math.round(price * 25).toLocaleString();
     }
   </script>
 </body>
